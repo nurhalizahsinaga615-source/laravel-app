@@ -9,6 +9,9 @@ class Pelanggan extends Model
     protected $table = 'tb_pelanggan';
     protected $primaryKey = 'id_pelanggan';
 
-    protected $guarded = [];
-
-}
+    protected $fillable = [
+        "nama_pelanggan",
+        "no_hp",
+    ];
+                
+}              

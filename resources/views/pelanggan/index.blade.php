@@ -1,42 +1,37 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('content')
+
 <h2>Pelanggan</h2>
-
-
-@if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
-
-<a href="{{ url('pelanggan/create') }}" class="btn btn-primary mb-3">Tambah Data</a>
+<a href="{{ url('pelanggan/create') }}" class="btn btn-primary mb-3">Tambah Pelanggan</a>
 
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Id</th>
-            <th>Nama</th>
-            <th>No. HP</th>
+            <th>No</th>
+            <th>Nama Pelanggan</th>
+            <th>No Hp</th>
             <th>Aksi</th>
         </tr>
     </thead>
     <tbody>
-        @foreach ($rows as $row)
+        @foreach ($pelanggans as $index => $pelanggan)
         <tr>
-            <td>{{ $row->id_pelanggan }}</td>
-            <td>{{ $row->nama_pelanggan }}</td>
-            <td>{{ $row->no_hp }}</td>
+            <td>{{ $index + 1 }}</td>
+            <td>{{ $pelanggan->nama_pelanggan }}</td>
+            <td>{{ $pelanggan->no_hp }}</td>
             <td>
-                <a href="{{ url('pelanggan/' .$row->id_pelanggan. '/edit') }}" class="btn btn-primary btn-sm">Edit</a>
-                
-                <form action="{{ url('/pelanggan/'.$row->id_pelanggan) }}" method="POST" style="display:inline;">
-                @csrf
-                @method('DELETE')
+                <a href="{{ url('pelanggan/'. $pelanggan->id_pelanggan .'/edit') }}" class="btn btn-primary btn-sm">Edit</a>
+                <form action="{{ url('pelanggan/'. $pelanggan->id_pelanggan) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
                     <button type="submit" class="btn btn-danger btn-sm"
-                    onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
+                        onclick="return confirm('Ingin Hapus Data Pelanggan?')">Hapus</button>
                 </form>
             </td>
         </tr>
         @endforeach
     </tbody>
 </table>
+
 @endsection

@@ -7,82 +7,59 @@ use Illuminate\Http\Request;
 
 class PelangganController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Tampilkan semua pelanggan
     public function index()
     {
-        $rows = Pelanggan::all();
-        return view('pelanggan.index', compact('rows'));
+        $pelanggans = Pelanggan::all(); // Hanya panggil model Pelanggan
+        return view('pelanggan.index', compact('pelanggans'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Form tambah pelanggan
     public function create()
     {
         return view('pelanggan.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Simpan pelanggan baru
     public function store(Request $request)
     {
-        Pelanggan::create([
-            
-            'nama_pelanggan'=> $request->nama_pelanggan,
-            'no_hp'=> $request->no_hp,
-            
+        $request->validate([
+            'nama_pelanggan' => 'required',
+            'no_hp' => 'required'
         ]);
-        return redirect('/pelanggan');
+
+        Pelanggan::create($request->all());
+
+        return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Form edit pelanggan
+    public function edit($id)
     {
-        //
+        $pelanggan = Pelanggan::findOrFail($id);
+        return view('pelanggan.edit', compact('pelanggan'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Update pelanggan
+    public function update(Request $request, $id)
     {
-        $row = Pelanggan:: findOrfail($id);
-        return view('pelanggan.edit', compact('row'));
+        $request->validate([
+            'nama_pelanggan' => 'required',
+            'no_hp' => 'required'
+        ]);
+
+        $pelanggan = Pelanggan::findOrFail($id);
+        $pelanggan->update($request->all());
+
+        return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil diperbarui');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-{
-    $pelanggan = Pelanggan::findOrFail($id);
-
-    $pelanggan->nama_pelanggan = $request->nama_pelanggan;
-    $pelanggan->no_hp = $request->no_hp;
-    $pelanggan->save(); // Simpan ke database
-
-    return redirect('/pelanggan')->with('success', 'Data pelanggan berhasil diupdate!');
-}
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
+    // Hapus pelanggan
     public function destroy($id)
-{
-    $pelanggan = Pelanggan::findOrFail($id);
-    $pelanggan->delete();
+    {
+        $pelanggan = Pelanggan::findOrFail($id);
+        $pelanggan->delete();
 
-    return redirect('/pelanggan')->with('success', 'Data pelanggan berhasil dihapus!');
-
-    dd("DELETE request diterima untuk id $id");
-}
-
-
-
+        return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil dihapus');
+    }
 }

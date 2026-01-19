@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::create('tb_pesanan', function (Blueprint $table) {
+            $table->bigIncrements('id_pesanan');
+
+          
+            $table->unsignedBigInteger('pelanggan_id');
+            $table->unsignedBigInteger('menu_id');
+
+           
+            $table->integer('jumlah');
+            $table->integer('total_harga');
+
+            $table->timestamps();
+
+          
+            $table->foreign('pelanggan_id')
+                  ->references('id_pelanggan')
+                  ->on('tb_pelanggan')
+                  ->onDelete('cascade');
+
+            $table->foreign('menu_id')
+                  ->references('id_menu')
+                  ->on('tb_menu')
+                  ->onDelete('cascade');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('tb_pesanan');
+    }
+};
